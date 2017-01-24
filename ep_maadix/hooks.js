@@ -317,7 +317,7 @@ exports.eejsBlock_adminMenu = function (hook_name, args, cb) {
         , hasTwoDirDown = (args.content.indexOf('<a href="../../') != -1)
         , urlPrefix = hasAdminUrlPrefix ? "admin/" : hasTwoDirDown ? "../../" : hasOneDirDown ? "../" : ""
         ;
-    args.content = args.content + '<li><a href="' + urlPrefix + 'userpadadmin">User Administration</a> </li>';
+    args.content = args.content + '<li><a href="' + urlPrefix + 'userpadadmin">Users and groups</a> </li>';
     return cb();
 };
 
