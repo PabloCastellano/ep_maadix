@@ -40,7 +40,7 @@ var dbAuthParams = {
 
 var DEBUG_ENABLED = false;
 
-settings.encryptPassword = function (password, salt, cb) {
+encryptPassword = function (password, salt, cb) {
     var encrypted = crypto.createHmac('sha256', salt).update(password).digest('hex');
     cb(encrypted);
 };
