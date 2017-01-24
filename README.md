@@ -1,20 +1,40 @@
-ep_user_pad
-===========
+ep_maadix
+=========
 
-User-Management System for etherpad-lite
+This plugin adds the following features to etherpad-lite:
 
-This is the admin tool for the ep_user_pad_frontend plugin for etherpad-lite. Please look at installation.pdf for further installation informations. 
+- User-Management System
+- Group-Management System
+- Optionally allow register of new users
+- Optionally allow public pads
+- Administration interface
 
-The frontend plugin for the user-management system can be found at
+Installation
+------------
 
-https://github.com/aoberegg/ep_user_pad_frontend/
-<h1>IMPORTANT NOTE: currently not maintained</h1>
+npm install git+https://github.com/PabloCastellano/ep_maadix_pads.git
 
-This plugin is currently NOT maintained (apart from smaller bug fixes)! Nevertheless: You are welcome to use the plugin. If you find bugs it would be nice if you can provide pull requests.
+TODO
 
-Known alternatives to this plugin:
-<ul>
-  <li>https://github.com/framasoft/ep_mypads</li>
-  <li>https://github.com/vltugraz/ep_user_pads</li>
-  <li>https://github.com/reality/ep_frontend_community</li>
-</ul>
+Screenshots
+-----------
+
+TODO
+
+
+Credits
+-------
+
+It is based in these other plugins that were unmaintained at the time of the development:
+
+- https://github.com/aoberegg/ep_user_pad/
+- https://github.com/aoberegg/ep_user_pad_frontend/
+
+Known alternatives to this plugin
+---------------------------------
+
+- https://github.com/framasoft/ep_mypads
+- https://github.com/vltugraz/ep_user_pads
+- https://github.com/reality/ep_frontend_community
+
+
