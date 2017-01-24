@@ -9,7 +9,7 @@
     "emailjs": "0.3.4",
     "crypto": "0.0.3",
     "nodemailer": "0.5.2",
-    "mysql": "2.0.0-alpha9"
+    "mysql": "2.12.0"
   },
   "readmeFilename": "README.txt",
   "main": "hooks.js",
