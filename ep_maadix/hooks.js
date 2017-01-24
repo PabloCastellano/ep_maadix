@@ -137,6 +137,7 @@ function getRandomChar(number, lower, upper, other, extra) {
         charSet += otherChars;
     return charSet.charAt(getRandomNum(0, charSet.length));
 }
+
 function getPassword(cb) {
     var mylength = 8;
     var myextraChars = '';
@@ -177,6 +178,7 @@ function deleteGroupFromEtherpad(id, cb) {
                 log('error', err);
                 cb();
             } else {
+                log('debug', "Group deleted");
                 cb();
             }
         });
@@ -190,6 +192,7 @@ function addPadToEtherpad(padName, groupId, cb) {
                 log('error', 'something went wrong while adding a group pad');
                 log('error', err);
             } else {
+                log('debug', "Pad added");
                 cb();
             }
         });
@@ -199,6 +202,7 @@ function addPadToEtherpad(padName, groupId, cb) {
 function deletePadFromEtherpad(name, groupid, cb) {
     getEtherpadGroupFromNormalGroup(groupid, function (group) {
         padManager.removePad(group + "$" + name);
+        log('debug', "Pad deleted");
         cb();
     });
 }
@@ -209,8 +213,8 @@ function addUserToEtherpad(userName, cb) {
             log('error', 'something went wrong while creating author');
             cb();
         } else {
-            log('error', "author created:");
-            log('error', author);
+            log('debug', "author created: ");
+            log('debug', author);
             cb(author);
         }
     });
@@ -255,6 +259,7 @@ function deleteUserFromEtherPad(userid, cb) {
             var token2authorQuery = connection2.query(token2authorSql, ['"' + author.authorID] + '"');
             token2authorQuery.on('error', mySqlErrorHandler);
             token2authorQuery.on('end', function () {
+                log('debug', "User deleted");
                 cb();
             });
         });
@@ -297,7 +302,6 @@ exports.expressCreateServer = function (hook_name, args, cb) {
         };
         res.send(eejs.require("ep_maadix/templates/admin/user_pad_admin_users.ejs", render_args));
     });
-
     args.app.get('/admin/userpadadmin/users/user', function (req, res) {
         var render_args = {
             errors: []
@@ -318,11 +322,10 @@ exports.eejsBlock_adminMenu = function (hook_name, args, cb) {
 };
 
 exports.eejsBlock_useradminmenu = function (hook_name, args, cb) {
-
-
     return cb();
 
 };
+
 exports.eejsBlock_styles = function (hook_name, args, cb) {
     args.content = args.content + eejs.require("ep_maadix/templates/styles.ejs", {}, module);
     return cb();
@@ -608,6 +611,7 @@ exports.socketio = function (hook_name, args, cb) {
                 var retval = {
                     success: true
                 };
+                log('debug', "User deactivated");
                 cb(retval);
             });
         });
@@ -627,6 +631,7 @@ exports.socketio = function (hook_name, args, cb) {
                 var retval = {
                     success: true
                 };
+                log('debug', "User activated");
                 cb(retval);
             });
         });
@@ -659,6 +664,7 @@ exports.socketio = function (hook_name, args, cb) {
                                 updateQuery.on('error', mySqlErrorHandler);
                                 updateQuery.on('end', function () {
                                     retval.success = true;
+                                    log('debug', "User password reset");
                                     cb(retval);
                                 });
                             }
@@ -676,6 +682,7 @@ exports.socketio = function (hook_name, args, cb) {
                                         updateQuery.on('error', mySqlErrorHandler);
                                         updateQuery.on('end', function () {
                                             retval.success = true;
+                                            log('debug', "User password reset");
                                             cb(retval);
                                         });
                                     }
