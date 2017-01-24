@@ -1,3 +1,7 @@
+CREATE DATABASE IF NOT EXISTS etherpad;
+
+USE etherpad;
+
 CREATE TABLE IF NOT EXISTS `GroupPads` (
 	`GroupID` int(11) NOT NULL,
 	`PadName` varchar(255) COLLATE utf8_bin NOT NULL,

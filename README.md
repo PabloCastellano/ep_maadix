@@ -12,9 +12,13 @@ This plugin adds the following features to etherpad-lite:
 Installation
 ------------
 
-npm install git+https://github.com/PabloCastellano/ep_maadix_pads.git
+    npm install git+https://github.com/PabloCastellano/ep_maadix_pads.git
 
-TODO
+    git clone https://github.com/PabloCastellano/ep_maadix_pads
+    mysql -u USER -p < sql_listing.sql
+    cp ep_maadix/email.json.template ep_maadix/email.json
+    cd etherpad-lite
+    npm install ../ep_maadix/ep_maadix
 
 Screenshots
 -----------
