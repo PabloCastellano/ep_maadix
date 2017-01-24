@@ -344,7 +344,7 @@ function existValueInDatabase(sql, params, cb) {
 exports.socketio = function (hook_name, args, cb) {
     var io = args.io.of("/pluginfw/admin/user_pad");
     io.on('connection', function (socket) {
-        if (!socket.handshake.session.user || !socket.handshake.session.user.is_admin) return;
+        if (!socket.request.session.user || !socket.request.session.user.is_admin) return;
         socket.on("search-group", function (searchTerm, cb) {
             var allGroups = [];
             var allSql = "Select * from Groups where Groups.name like ?";
