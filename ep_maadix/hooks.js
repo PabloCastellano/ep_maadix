@@ -275,34 +275,34 @@ exports.expressCreateServer = function (hook_name, args, cb) {
         var render_args = {
             errors: []
         };
-        res.send(eejs.require("ep_user_pad/templates/admin/user_pad_admin.ejs",
+        res.send(eejs.require("ep_maadix/templates/admin/user_pad_admin.ejs",
             render_args));
     });
     args.app.get('/admin/userpadadmin/groups', function (req, res) {
         var render_args = {
             errors: []
         };
-        res.send(eejs.require("ep_user_pad/templates/admin/user_pad_admin_groups.ejs",
+        res.send(eejs.require("ep_maadix/templates/admin/user_pad_admin_groups.ejs",
             render_args));
     });
     args.app.get('/admin/userpadadmin/groups/group', function (req, res) {
         var render_args = {
             errors: []
         };
-        res.send(eejs.require("ep_user_pad/templates/admin/user_pad_admin_group.ejs", render_args));
+        res.send(eejs.require("ep_maadix/templates/admin/user_pad_admin_group.ejs", render_args));
     });
     args.app.get('/admin/userpadadmin/users', function (req, res) {
         var render_args = {
             errors: []
         };
-        res.send(eejs.require("ep_user_pad/templates/admin/user_pad_admin_users.ejs", render_args));
+        res.send(eejs.require("ep_maadix/templates/admin/user_pad_admin_users.ejs", render_args));
     });
 
     args.app.get('/admin/userpadadmin/users/user', function (req, res) {
         var render_args = {
             errors: []
         };
-        res.send(eejs.require("ep_user_pad/templates/admin/user_pad_admin_user.ejs", render_args));
+        res.send(eejs.require("ep_maadix/templates/admin/user_pad_admin_user.ejs", render_args));
     });
     return cb();
 };
@@ -324,7 +324,7 @@ exports.eejsBlock_useradminmenu = function (hook_name, args, cb) {
 
 };
 exports.eejsBlock_styles = function (hook_name, args, cb) {
-    args.content = args.content + eejs.require("ep_user_pad/templates/styles.ejs", {}, module);
+    args.content = args.content + eejs.require("ep_maadix/templates/styles.ejs", {}, module);
     return cb();
 };
 

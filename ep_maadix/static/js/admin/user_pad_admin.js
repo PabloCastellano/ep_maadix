@@ -530,16 +530,16 @@ function users(hooks, context,cb){
 			row.find(".newPWButton").bind('click', function(e){
 				var row = $(e.target).closest("tr");
 	       		var id = row.find('.userID').html();
-	       		row.find(".success").html('<img src= "../../static/plugins/ep_user_pad/static/html/wait.gif" width ="12" height = "12" alt="Wait">');
+	       		row.find(".success").html('<img src= "../../static/plugins/ep_maadix/static/html/wait.gif" width ="12" height = "12" alt="Wait">');
 				var val = {};
 				val.id = id;
 				val.row = row;
 	       		socket.emit("reset-pw-user", val, function(retval){
 	       			var row = $(".ID:contains('"+retval.id+"')");
 	       			if(retval.success){
-	       				row.parent().find('.success').html('<img src= "../../static/plugins/ep_user_pad/static/html/success.jpg" width ="12" height = "12" alt="Success">');
+	       				row.parent().find('.success').html('<img src= "../../static/plugins/ep_maadix/static/html/success.jpg" width ="12" height = "12" alt="Success">');
 	       			}else{
-	       				row.parent().find('.success').html('<img src= "../../static/plugins/ep_user_pad/static/html/fail.jpg" width ="12" height = "12" alt="Fail">');
+	       				row.parent().find('.success').html('<img src= "../../static/plugins/ep_maadix/static/html/fail.jpg" width ="12" height = "12" alt="Fail">');
 	       			}
 	       		});
 			});
