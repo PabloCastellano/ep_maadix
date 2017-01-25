@@ -12,6 +12,21 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License. */
 
+function Werteliste (querystring) {
+	if (querystring == '') return;
+	var wertestring = querystring.slice(1);
+	var paare = wertestring.split("&");
+	var paar, name, wert;
+	for (var i = 0; i < paare.length; i++) {
+	    paar = paare[i].split("=");
+	    name = paar[0];
+	    wert = paar[1];
+	    name = unescape(name).replace("+", " ");
+	    wert = unescape(wert).replace("+", " ");
+	    this[name] = wert;
+	}
+};
+
 function group(hooks,context,cb){
 	var socket, loc = document.location, port = loc.port == "" ? (loc.protocol == "https:" ? 443
 			: 80)
@@ -29,6 +44,9 @@ function group(hooks,context,cb){
 	var currentPads = [];
 	var currentUser = [];
 	
+	var list = new Werteliste(document.location.search);
+	var groupId = list.id;
+
 	var sortByIdAsc = function(a,b){
 		return a.id - b.id;
 	};
@@ -51,26 +69,10 @@ function group(hooks,context,cb){
 		  return -1;
 		 return 0; //default return value (no sorting)
 	};
-	function Werteliste (querystring) {
-		  if (querystring == '') return;
-		  var wertestring = querystring.slice(1);
-		  var paare = wertestring.split("&");
-		  var paar, name, wert;
-		  for (var i = 0; i < paare.length; i++) {
-		    paar = paare[i].split("=");
-		    name = paar[0];
-		    wert = paar[1];
-		    name = unescape(name).replace("+", " ");
-		    wert = unescape(wert).replace("+", " ");
-		    this[name] = wert;
-		  }
-	};
-	
 	
 	var searchPads = function(searchTerm){
 		var searchPad = {};
-		var list = new Werteliste(document.location.search);
-		searchPad.id = list.id;
+		searchPad.id = groupId;
 		searchPad.term = searchTerm;
 		socket.emit("search-pads", searchPad,function(pads){
 			currentPads = pads;
@@ -79,8 +81,7 @@ function group(hooks,context,cb){
 	};
 	var searchUsers = function(searchTerm){
 		var searchUser = {};
-		var list = new Werteliste(document.location.search);
-		searchUser.id = list.id;
+		searchUser.id = groupId;
 		searchUser.term = searchTerm;
 		socket.emit("search-group-user", searchUser,function(user) {
 			currentUser = user;
@@ -104,8 +105,7 @@ function group(hooks,context,cb){
 	var addPad = function(pad){
 		var padGroup = {};
 		padGroup.padName = pad.name;
-		var list = new Werteliste(document.location.search);
-		padGroup.groupid = list.id;
+		padGroup.groupid = groupId;
 		socket.emit("add-pad-to-group", padGroup, function(added){
 			if(added){
 				$('#textfield-pad').html('Pad added!');
@@ -116,9 +116,8 @@ function group(hooks,context,cb){
 		});
 	};
 	var searchAllUser = function(name){
-		var list = new Werteliste(document.location.search);
 		var val_list = {};
-		val_list.groupid = list.id;
+		val_list.groupid = groupId;
 		val_list.name = name;
 		socket.emit("search-all-users-not-in-group", val_list, function(allUser){
 			showUsersUserBox(allUser);
@@ -217,8 +216,7 @@ function group(hooks,context,cb){
 	       		var id = row.find('.userId').html();
 	       		var usergroup = {};
 	       		usergroup.userid = id;
-	    		var list = new Werteliste(document.location.search);
-	       		usergroup.groupid = list.id;
+			usergroup.groupid = groupId;
 	       		socket.emit("suspend-user-from-group", usergroup, function(){
 	       			searchUsers('');
 	       		});
@@ -600,7 +598,10 @@ function user(hooks,context,cb){
 	socket = io.connect(url, {resource : resource});
 	
 	var currentGroups = [];
-	
+
+	var list = new Werteliste(document.location.search);
+	var groupId = list.id;
+
 	var sortByIdAsc = function(a,b){
 		return a.id - b.id;
 	};
@@ -623,27 +624,11 @@ function user(hooks,context,cb){
 		  return -1;
 		 return 0; //default return value (no sorting)
 	};
-	function Werteliste (querystring) {
-		  if (querystring == '') return;
-		  var wertestring = querystring.slice(1);
-		  var paare = wertestring.split("&");
-		  var paar, name, wert;
-		  for (var i = 0; i < paare.length; i++) {
-		    paar = paare[i].split("=");
-		    name = paar[0];
-		    wert = paar[1];
-		    name = unescape(name).replace("+", " ");
-		    wert = unescape(wert).replace("+", " ");
-		    this[name] = wert;
-		  }
-	};
-	
 
 	var addGroup = function(id){
 		var userGroup = {};
 		userGroup.groupid = id;
-		var list = new Werteliste(document.location.search);
-		userGroup.userID = list.id;
+		userGroup.userID = groupId;
 		socket.emit("add-group-to-user", userGroup, function(added){
 			if(added){
 				searchAllGroupsOfUser('');
@@ -656,9 +641,8 @@ function user(hooks,context,cb){
 	};
 
 	var searchAllGroupsOfUser = function(name){
-		var list = new Werteliste(document.location.search);
 		var val_list = {};
-		val_list.id = list.id;
+		val_list.id = groupId;
 		val_list.name = name;
 		socket.emit("search-groups-of-user", val_list, function(allGroups){
 			currentGroups = allGroups;
@@ -667,9 +651,8 @@ function user(hooks,context,cb){
 	};
 	
 	var searchAllGroupsNotInUser = function(name){
-		var list = new Werteliste(document.location.search);
 		var val_list = {};
-		val_list.id = list.id;
+		val_list.id = groupId;
 		val_list.name = name;
 		socket.emit("search-groups-not-in-user", val_list, function(allGroups){
 			showGroupsGroupBox(allGroups);
@@ -722,8 +705,7 @@ function user(hooks,context,cb){
 	       		var id = row.find('.groupID').html();
 	       		var usergroup = {};
 	       		usergroup.groupid = id;
-	    		var list = new Werteliste(document.location.search);
-	       		usergroup.userid = list.id;
+			usergroup.userid = groupId;
 	       		
 	       		socket.emit("suspend-user-from-group", usergroup, function(){
 	       			searchAllGroupsOfUser('');
