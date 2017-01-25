@@ -60,23 +60,18 @@ limitations under the License. -->
 		</div>
 
 		<div class="innerwrapper">
-		
 			<h2>Users and groups</h2>
-			<% e.begin_block("useradminmenu"); %>
-				<div class = "leftwrapper">
-					<li><a href="../userpadadmin/groups">Groups</a></li>
-					<li><a href="../userpadadmin/users">Users</a></li>
-				</div>
-			<%e.end_block(); %>
+			<h3>Create a new user account</h3>
 			<div>
-			<form name="Add Group" id="add-user">
-				<input type="text" placeholder="E-Mail of new user" id="name-of-user">
-				<input type="password" placeholder="PW of new user" id="pw-of-user">
-				<input type="button" value="Add User" id="addUserButton">
-				<a id="textfield-user"></a>
-			</form>
+				<form name="Add user" id="add-user">
+					<input type="text" placeholder="E-mail of new user" id="name-of-user">
+					<input type="password" placeholder="PW of new user" id="pw-of-user">
+					<input type="button" value="Create" id="addUserButton">
+					<a id="textfield-user"></a>
+				</form>
 			</div>
-			<div class = "rightwrapper">
+			<h3>User list</h3>
+			<div class="rightwrapper">
 				<div class='user-results-div'>
 				<table>
 					<thead>
@@ -84,31 +79,27 @@ limitations under the License. -->
 							<th class="header" data-label="Id">ID<a class="sort up"></a><a class="sort down"></a></th>
 							<th class="header" data-label="user-name">User Name<a class="sort up"></a><a class="sort down"></a></th>
 							<th class="header" data-label="#groups">#Groups<a class="sort up"></a><a class="sort down"></a></th>
-							<th class="header" data-label="delete">Delete</th>
-							<th class="header" data-label="newpw">Send New PW</th>
-							<th class="header" data-label=""></th>
-							<th class="header" data-label="active">Active</th>
-							<td></td>
+							<th class="header" data-label="actions">Actions</th>
 						</tr>
 					</thead>
+					<tbody class='user-results'>
+					</tbody>
 					<tbody class="template">
 						<tr>
 							<td class="ID" data-label="Id"></td>
 							<td class="Name" data-label="name"></td>
 							<td class="Groups" data-label="groups"></td>
-							<td class="delete" data-label="Delete"><input class="deleteButton" type="button" value="Delete"></td>
-							<td class="newpw" data-label="NewPW"><input class="newPWButton" type="button" value="Send"></td>
-							<td class="success"></td>
-							<td class="setActive" data-label="Activation"><input class="setActiveBtn" type="button" value="Active"></td>
+							<td class="actions" data-label="Actios">
+								<input class="newPWButton" type="button" value="Send new password">
+								<span class="success"></span>
+								<input class="setActiveBtn" type="button" value="Active">
+								<input class="deleteButton" type="button" value="Delete">
+							</td>
 						</tr>
 					</tbody>
-					<tbody class='user-results'>
-						
-					</tbody>
 				</table>
+				</div>
 			</div>
-		</div>
-
 		</div>
 	</div>
 </body>

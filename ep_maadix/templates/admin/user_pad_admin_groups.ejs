@@ -62,20 +62,16 @@ limitations under the License. -->
 		<div class="innerwrapper">
 		
 			<h2>Users and groups</h2>
-			<% e.begin_block("useradminmenu"); %>
-				<div class = "leftwrapper">
-					<li><a href="../userpadadmin/groups">Groups</a></li>
-					<li><a href="../userpadadmin/users">Users</a></li>
-				</div>
-			<%e.end_block(); %>
+			<h3>Create a new group</h3>
 			<div>
 			<form name="Add Group" id="add-group">
 				<input type="text" placeholder="Name of new group" id="name-of-group">
-				<input type="button" value="Add Group" id="addGroupButton">
+				<input type="button" value="Create" id="addGroupButton">
 				<a id="textfield-group"></a>
 			</form>
 			</div>
-			<div class = "rightwrapper">
+			<h3>Group list</h3>
+			<div class="rightwrapper">
 				<div class='group-results-div'>
 				<table>
 					<thead>
@@ -83,20 +79,22 @@ limitations under the License. -->
 							<th class="header" data-label="Id">ID<a class="sort up"></a><a class="sort down"></a></th>
 							<th class="header" data-label="group-name">Group Name<a class="sort up"></a><a class="sort down"></a></th>
 							<th class="header" data-label="#authors">#Authors<a class="sort up"></a><a class="sort down"></a></th>
-							<th class="header" data-label="delete">Delete</th>
+							<th class="header" data-label="actions">Actions</th>
 							<td></td>
 						</tr>
 					</thead>
+					<tbody class='group-results'>
+					</tbody>
 					<tbody class="template">
 						<tr>
 							<td class="ID" data-label="Id"></td>
 							<td class="Name" data-label="name"></td>
 							<td class="Authors" data-label="authors"></td>
-							<td class="delete" data-label="Delete"><input class="deleteButton" type="button" value="Delete"></td>
+							<td class="actions" data-label="Actions">
+								<a class="manageGroupBtn" href="#"><input type="button" value="Manage"></a>
+								<input class="deleteButton" type="button" value="Delete">
+							</td>
 						</tr>
-					</tbody>
-					<tbody class='group-results'>
-						
 					</tbody>
 				</table>
 			</div>

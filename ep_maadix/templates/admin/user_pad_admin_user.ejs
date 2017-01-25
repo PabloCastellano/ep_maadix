@@ -61,13 +61,7 @@ limitations under the License. -->
 		</div>
 
 		<div class="innerwrapper">
-			<h2>Users and groups</h2>
-			<% e.begin_block("useradminmenu"); %>
-				<div class = "leftwrapper">
-					<li><a href="../../userpadadmin/groups">Groups</a></li>
-					<li><a href="../../userpadadmin/users">Users</a></li>
-				</div>
-			<%e.end_block(); %>
+			<h2>User <span id="userName"></span></h2>
 			<div id="GroupBox" class="white_content">
 	 			<a href = "javascript:void(0)" onclick = "document.getElementById('GroupBox').style.display='none'
 	 				;document.getElementById('fade').style.display='none'">
@@ -78,8 +72,8 @@ limitations under the License. -->
 			 		<table class="groupResultTable">
 						<thead id="tableGroupBoxHead">
 							<tr>
-								<th  data-label="id">ID</th>
-								<th  data-label="name">Group Name</th>
+								<th data-label="id">ID</th>
+								<th data-label="name">Group Name</th>
 							</tr>
 						</thead>
 						<tbody class="template">
@@ -94,30 +88,34 @@ limitations under the License. -->
 	 			</div>
 		 	</div>	
 			<div id="fade" class="black_overlay"></div>
-			<div class = "rightwrapper">
-				<form name="Add Group" id="add-group">
-					<input type="button" value="Add Group" id="addGroupButton">
-					<a id="textfield-group"></a>
-				</form>
-				<div class='group-results-div'>
-					<table>
-						<thead>
-							<tr>
-								<th class="header" data-label="group-id">ID<a class="sort up"></a><a class="sort down"></a></th>
-								<th class="header" data-label="group-name">Group Name<a class="sort up"></a><a class="sort down"></a></th>
-								<th class="header" data-label="escape">Escape</th>
-								<td></td>
-							</tr>
-						</thead>
-						<tbody class="template">
-							<tr>
-								<td class="ID" data-label="Id"></td>
-								<td class="Name" data-label="name"></td>
-								<td class="delete" data-label="escape"><input class="escapeButton" type="button" value="Escape"></td>
-							</tr>
-						</tbody>
-						<tbody class='group-results'></tbody>
-					</table>
+			<div>
+				<div class="lefttable">
+					<p>This user is in the following groups:</p>
+					<div class='group-results-div'>
+						<table>
+							<thead>
+								<tr>
+									<th class="header" data-label="group-id">ID<a class="sort up"></a><a class="sort down"></a></th>
+									<th class="header" data-label="group-name">Group Name<a class="sort up"></a><a class="sort down"></a></th>
+									<th class="header" data-label="escape">Remove from group</th>
+								</tr>
+							</thead>
+							<tbody class='group-results'></tbody>
+							<tbody class="template">
+								<tr>
+									<td class="ID" data-label="Id"></td>
+									<td class="Name" data-label="name"></td>
+									<td class="delete" data-label="escape"><input class="escapeButton" type="button" value="Remove"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="righttable">
+					<form name="Add Group" id="add-group">
+						<input type="button" value="Add user to a new group" id="addGroupButton">
+						<a id="textfield-group"></a>
+					</form>
 				</div>
 			</div>
 		</div>

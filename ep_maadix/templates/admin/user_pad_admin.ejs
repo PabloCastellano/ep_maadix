@@ -60,14 +60,11 @@ limitations under the License. -->
 		</div>
 
 		<div class="innerwrapper">
-		
 			<h2>Users and groups</h2>
-			<% e.begin_block("useradminmenu"); %>
-				<div class = "leftwrapper">
-					<li><a href="userpadadmin/groups">Groups</a></li>
-					<li><a href="userpadadmin/users">Users</a></li>
-				</div>
-			<%e.end_block(); %>
+			<p>In this area you can manage all your users and groups.</p>
+			<p>Currently there are <span id="n_users">0</span> users and <span id="n_groups">0</span> groups created.</p>
+			<a href="userpadadmin/groups"><button type="button">Manage groups</button></a>
+			<a href="userpadadmin/users"><button type="button">Manage users</button></a>
 		</div>
 	</div>
 </body>

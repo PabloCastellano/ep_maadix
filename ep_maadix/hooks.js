@@ -165,7 +165,6 @@ function getEtherpadGroupFromNormalGroup(id, cb) {
     var getMapperQuery = connection2.query(getMapperSql, ["mapper2group:" + id]);
     getMapperQuery.on('error', mySqlErrorHandler);
     getMapperQuery.on('result', function (mapper) {
-
         cb(mapper.value.replace(/"/g, ''));
     });
 }
@@ -280,15 +279,13 @@ exports.expressCreateServer = function (hook_name, args, cb) {
         var render_args = {
             errors: []
         };
-        res.send(eejs.require("ep_maadix/templates/admin/user_pad_admin.ejs",
-            render_args));
+        res.send(eejs.require("ep_maadix/templates/admin/user_pad_admin.ejs", render_args));
     });
     args.app.get('/admin/userpadadmin/groups', function (req, res) {
         var render_args = {
             errors: []
         };
-        res.send(eejs.require("ep_maadix/templates/admin/user_pad_admin_groups.ejs",
-            render_args));
+        res.send(eejs.require("ep_maadix/templates/admin/user_pad_admin_groups.ejs", render_args));
     });
     args.app.get('/admin/userpadadmin/groups/group', function (req, res) {
         var render_args = {
@@ -321,11 +318,6 @@ exports.eejsBlock_adminMenu = function (hook_name, args, cb) {
     return cb();
 };
 
-exports.eejsBlock_useradminmenu = function (hook_name, args, cb) {
-    return cb();
-
-};
-
 exports.eejsBlock_styles = function (hook_name, args, cb) {
     args.content = args.content + eejs.require("ep_maadix/templates/styles.ejs", {}, module);
     return cb();
@@ -348,6 +340,39 @@ exports.socketio = function (hook_name, args, cb) {
     var io = args.io.of("/pluginfw/admin/user_pad");
     io.on('connection', function (socket) {
         if (!socket.request.session.user || !socket.request.session.user.is_admin) return;
+
+        socket.on("get-etherpad-group-name", function (groupid, cb) {
+            getEtherpadGroupFromNormalGroup(groupid, function (group) {
+                cb(group);
+            });
+        });
+
+        socket.on("get-user-name", function (userId, cb) {
+		var userName;
+		var userNameSql = "Select name from User where User.userID = ? LIMIT 1";
+		var queryUserName = connection.query(userNameSql, [userId]);
+		queryUserName.on('error', mySqlErrorHandler);
+            queryUserName.on('result', function (result) {
+                userName = result.name;
+            });
+            queryUserName.on('end', function () {
+                cb(userName);
+            });
+        });
+
+        socket.on("get-group-name", function (groupId, cb) {
+		var groupName;
+		var groupNameSql = "Select name from Groups where Groups.groupID = ? LIMIT 1";
+		var queryGroups = connection.query(groupNameSql, [groupId]);
+		queryGroups.on('error', mySqlErrorHandler);
+            queryGroups.on('result', function (result) {
+                groupName = result.name;
+            });
+            queryGroups.on('end', function () {
+                cb(groupName);
+            });
+        });
+
         socket.on("search-group", function (searchTerm, cb) {
             var allGroups = [];
             var allSql = "Select * from Groups where Groups.name like ?";
@@ -588,7 +613,7 @@ exports.socketio = function (hook_name, args, cb) {
                                 });
                             });
                             addUserQuery.on('end', function () {
-                                cb(true, 'User added!');
+                                cb(true, 'User created!');
                             });
                         });
                     });

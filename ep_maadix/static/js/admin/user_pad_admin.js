@@ -43,9 +43,10 @@ function group(hooks,context,cb){
 	
 	var currentPads = [];
 	var currentUser = [];
-	
+
 	var list = new Werteliste(document.location.search);
 	var groupId = list.id;
+	var groupEtherpadName;
 
 	var sortByIdAsc = function(a,b){
 		return a.id - b.id;
@@ -70,6 +71,16 @@ function group(hooks,context,cb){
 		 return 0; //default return value (no sorting)
 	};
 	
+	var getGroupData = function(groupId) {
+		socket.emit("get-group-name", groupId, function(groupName){
+			$("#groupName").html(groupName);
+		});
+		socket.emit('get-etherpad-group-name', groupId, function(group) {
+			groupEtherpadName = group;
+			console.log(groupEtherpadName);
+		});
+	}
+
 	var searchPads = function(searchTerm){
 		var searchPad = {};
 		searchPad.id = groupId;
@@ -88,7 +99,7 @@ function group(hooks,context,cb){
 			showUser(user, sortByNameAsc);
 		});
 	};
-	var addUser = function(id){
+	var addUserToGroup = function(id){
 		var userGroup = {};
 		userGroup.userID = id;
 		var list = new Werteliste(document.location.search);
@@ -108,7 +119,6 @@ function group(hooks,context,cb){
 		padGroup.groupid = groupId;
 		socket.emit("add-pad-to-group", padGroup, function(added){
 			if(added){
-				$('#textfield-pad').html('Pad added!');
 				searchPads('');
 			}else{
 				$('#textfield-pad').html('Pad already exists!');
@@ -174,31 +184,28 @@ function group(hooks,context,cb){
 		for(var i = 0; i < pads.length; i++){
 			var row = widget.find('.template tr').clone();
 			row.find(".Name").html(pads[i].name);
-			row.find(".Name").bind('click', function(e){
+			row.find(".visitPadBtn").bind('click', function(e){
 //				console.log(document.location);
-				var list = new Werteliste(document.location.search);
-				var pad_name = $(e.target).closest(".Name");
-//				console.log(pad_name.html());
-				socket.emit('direct-to-group-pad','admin', list.id,pad_name.html() ,function(session, group, pad_name){
-//					console.log(session);
-//					console.log(group);
-					document.cookie = "sessionID="+ session +"; path=/";
-					var padurl = url + "p/"+ group + "$" + pad_name;
-//					console.log(padurl);
-					window.location.replace(padurl);
-					
-				});
+				var pad_name = $(e.target).parent().parent().siblings(".Name")
+				//console.log(pad_name.html());
+				socket.emit('direct-to-group-pad',
+							'admin',
+							groupId,
+							pad_name.html(),
+							function(session, group, pad_name) {
+								document.cookie = "sessionID=" + session + "; path=/";
+							}
+				);
 			});
-			row.find(".deleteButton").bind('click',function(e){
+			row.find(".deletePadBtn").bind('click',function(e){
 				var row = $(e.target).closest("tr");
 	       		var name = row.find('.Name').html();
 	       
-	       		var list = new Werteliste(document.location.search);
-	       		
-				socket.emit("delete-pad", name,list.id, function(){
+				socket.emit("delete-pad", name, groupId, function(){
 					searchPads('');
 				});
 			});
+			row.find(".visitPadBtn").parent().attr('href', "/p/" + groupEtherpadName + "$" + pads[i].name);
 			resultList.append(row);
 		};	
 	};
@@ -236,7 +243,7 @@ function group(hooks,context,cb){
 		      row.find(".name").bind('click', function(e){
 		    	var row = $(e.target).closest("tr");
 		       	var id = row.find('.userID').html();
-		    	addUser(id);
+			addUserToGroup(id);
 		    	searchAllUser('');
 		      });
 		      resultList.append(row);
@@ -244,6 +251,7 @@ function group(hooks,context,cb){
 
 	};
 
+	getGroupData(groupId);
 	searchPads('');
 	searchUsers('');
 };
@@ -318,7 +326,6 @@ function groups(hooks, context,cb){
 	var addGroup = function(name){
 		socket.emit("add-group", name, function(added){
 			if(added){
-				$('#textfield-group').html('Group added!');
 				searchGroup('');
 			}else{
 				$('#textfield-group').html('Group already exists!');
@@ -361,12 +368,13 @@ function groups(hooks, context,cb){
 	var showGroups = function(groups, sortFunc){
 		groups.sort(sortFunc);
 		var widget = $('.group-results-div');
-		var resultList =widget.find('.group-results');
+		var resultList = widget.find('.group-results');
 		resultList.html("");
 		for(var i = 0; i < groups.length; i++){
 			var row = widget.find('.template tr').clone();
-			row.find(".ID").html('<a class="groupID">' + groups[i].id)+ '</a>';
-			row.find(".Name").html('<a href = "groups/group?id='+ groups[i].id+'" class="groupName">' + groups[i].name + '</a>');
+			var groupUrl = 'groups/group?id='+ groups[i].id;
+			row.find(".ID").html('<a class="groupID">' + groups[i].id + '</a>');
+			row.find(".Name").html('<a class="groupName">' + groups[i].name + '</a>');
 			row.find(".Authors").html(groups[i].amAuthors);
 			row.find(".deleteButton").bind('click',function(e){
 				var row = $(e.target).closest("tr");
@@ -375,6 +383,7 @@ function groups(hooks, context,cb){
 					searchGroup('');
 				});
 			});
+			row.find(".manageGroupBtn")[0].href = groupUrl;
 			resultList.append(row);
 		};
 			
@@ -600,7 +609,7 @@ function user(hooks,context,cb){
 	var currentGroups = [];
 
 	var list = new Werteliste(document.location.search);
-	var groupId = list.id;
+	var userId = list.id;
 
 	var sortByIdAsc = function(a,b){
 		return a.id - b.id;
@@ -625,15 +634,20 @@ function user(hooks,context,cb){
 		 return 0; //default return value (no sorting)
 	};
 
+	var getUserData = function(userId) {
+		socket.emit("get-user-name", userId, function(username){
+			$("#userName").html(username);
+		});
+	}
+
 	var addGroup = function(id){
 		var userGroup = {};
 		userGroup.groupid = id;
-		userGroup.userID = groupId;
+		userGroup.userID = userId;
 		socket.emit("add-group-to-user", userGroup, function(added){
 			if(added){
 				searchAllGroupsOfUser('');
 				searchAllGroupsNotInUser('');
-				$('#textfield-group').html('Group added!');
 			}else{
 				$('#textfield-group').html('Group already exists!');
 			}
@@ -642,7 +656,7 @@ function user(hooks,context,cb){
 
 	var searchAllGroupsOfUser = function(name){
 		var val_list = {};
-		val_list.id = groupId;
+		val_list.id = userId;
 		val_list.name = name;
 		socket.emit("search-groups-of-user", val_list, function(allGroups){
 			currentGroups = allGroups;
@@ -652,7 +666,7 @@ function user(hooks,context,cb){
 	
 	var searchAllGroupsNotInUser = function(name){
 		var val_list = {};
-		val_list.id = groupId;
+		val_list.id = userId;
 		val_list.name = name;
 		socket.emit("search-groups-not-in-user", val_list, function(allGroups){
 			showGroupsGroupBox(allGroups);
@@ -705,7 +719,7 @@ function user(hooks,context,cb){
 	       		var id = row.find('.groupID').html();
 	       		var usergroup = {};
 	       		usergroup.groupid = id;
-			usergroup.userid = groupId;
+			usergroup.userid = userId;
 	       		
 	       		socket.emit("suspend-user-from-group", usergroup, function(){
 	       			searchAllGroupsOfUser('');
@@ -733,6 +747,7 @@ function user(hooks,context,cb){
 
 	};
 
+	getUserData(userId);
 	socket.on('search-all-groups-from-user-result', function(user){
 		showGroupsGroupBox(user);
 	});
@@ -741,6 +756,48 @@ function user(hooks,context,cb){
 
 
 
+function main(hooks,context,cb){
+	var socket, loc = document.location, port = loc.port == "" ? (loc.protocol == "https:" ? 443
+			: 80)
+			: loc.port, url = loc.protocol + "//"
+			+ loc.hostname + ":" + port + "/", pathComponents = location.pathname
+			.split('/'),
+	// Strip admin/plugins
+	baseURL = pathComponents.slice(0,
+			pathComponents.length - 4).join('/')
+			+ '/', resource = baseURL.substring(1)
+			+ "socket.io";
+//	console.log(resource);
+
+	socket = io.connect(url + "pluginfw/admin/user_pad", {resource : resource});
+
+	var currentGroups = [];
+
+	var searchGroup = function(searchTerm){
+		socket.emit("search-group", searchTerm, function(allGroups){
+			showGroups(allGroups);
+		});
+	};
+
+	var searchUser = function(searchTerm){
+		socket.emit("search-all-user", searchTerm, function(allUsers){
+			showUsers(allUsers);
+		});
+	};
+
+	var showGroups = function(groups){
+		var span = $('#n_groups');
+		span.html(groups.length);
+	};
+
+	var showUsers = function(users){
+		var span = $('#n_users');
+		span.html(users.length);
+	};
+
+	searchGroup('');
+	searchUser('');
+};
 
 
 
@@ -754,6 +811,8 @@ exports.documentReady = function(hooks, context, cb){
 		    users(hooks,context,cb);
 		else if(context == "admin/user_pad_user")
 			user(hooks, context,cb);
+		else if(context == "admin/user_pad")
+			main(hooks, context,cb);
 		else
 			return;
 
