@@ -31,7 +31,7 @@ function group(hooks,context,cb){
 	var socket, loc = document.location, port = loc.port == "" ? (loc.protocol == "https:" ? 443
 			: 80)
 			: loc.port, url = loc.protocol + "//"
-			+ loc.hostname + ":" + port + "/pluginfw/admin/user_pad", pathComponents = location.pathname
+			+ loc.hostname + ":" + port + "/", pathComponents = location.pathname
 			.split('/'),
 	// Strip admin/plugins
 	baseURL = pathComponents.slice(0,
@@ -39,7 +39,7 @@ function group(hooks,context,cb){
 			+ '/', resource = baseURL.substring(1)
 			+ "socket.io";
 			
-	socket = io.connect(url, {resource : resource});
+	socket = io.connect(url + "pluginfw/admin/user_pad", {resource : resource});
 	
 	var currentPads = [];
 	var currentUser = [];
@@ -273,7 +273,7 @@ function groups(hooks, context,cb){
 	var socket, loc = document.location, port = loc.port == "" ? (loc.protocol == "https:" ? 443
 			: 80)
 			: loc.port, url = loc.protocol + "//"
-			+ loc.hostname + ":" + port + "/pluginfw/admin/user_pad", pathComponents = location.pathname
+			+ loc.hostname + ":" + port + "/", pathComponents = location.pathname
 			.split('/'),
 	// Strip admin/plugins
 	baseURL = pathComponents.slice(0,
@@ -283,7 +283,7 @@ function groups(hooks, context,cb){
 //	console.log("res:");
 //	console.log(resource);
 			
-	socket = io.connect(url, {resource : resource});
+	socket = io.connect(url + "pluginfw/admin/user_pad", {resource : resource});
 //	console.log('groups called');
 	var currentGroups = [];
 	
@@ -412,7 +412,7 @@ function users(hooks, context,cb){
 	var socket, loc = document.location, port = loc.port == "" ? (loc.protocol == "https:" ? 443
 			: 80)
 			: loc.port, url = loc.protocol + "//"
-			+ loc.hostname + ":" + port + "/pluginfw/admin/user_pad", pathComponents = location.pathname
+			+ loc.hostname + ":" + port + "/", pathComponents = location.pathname
 			.split('/'),
 	// Strip admin/plugins
 	baseURL = pathComponents.slice(0,
@@ -420,7 +420,7 @@ function users(hooks, context,cb){
 			+ '/', resource = baseURL.substring(1)
 			+ "socket.io";
 			
-	socket = io.connect(url, {resource : resource});
+	socket = io.connect(url + "pluginfw/admin/user_pad", {resource : resource});
 	
 	var currentUsers = [];
 	
@@ -595,7 +595,7 @@ function user(hooks,context,cb){
 	var socket, loc = document.location, port = loc.port == "" ? (loc.protocol == "https:" ? 443
 			: 80)
 			: loc.port, url = loc.protocol + "//"
-			+ loc.hostname + ":" + port + "/pluginfw/admin/user_pad", pathComponents = location.pathname
+			+ loc.hostname + ":" + port + "/", pathComponents = location.pathname
 			.split('/'),
 	// Strip admin/plugins
 	baseURL = pathComponents.slice(0,
@@ -604,7 +604,7 @@ function user(hooks,context,cb){
 			+ "socket.io";
 //	console.log(resource);
 			
-	socket = io.connect(url, {resource : resource});
+	socket = io.connect(url + "pluginfw/admin/user_pad", {resource : resource});
 	
 	var currentGroups = [];
 
