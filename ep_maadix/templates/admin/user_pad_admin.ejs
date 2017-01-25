@@ -12,61 +12,56 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License. -->
 <html>
-<head>
-<title>Users and groups</title>
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-<link rel="stylesheet" href="../static/css/admin.css">
-<script src="../socket.io/socket.io.js"></script>
-<script src="../static/js/jquery.js"></script>
-<script type="text/javascript" src="../static/js/require-kernel.js"></script>
-<script type="text/javascript"
-	src="../javascripts/lib/ep_etherpad-lite/static/js/ace2_common.js?callback=require.define"></script>
-<script type="text/javascript">
-	(function() {
-		var pathComponents = location.pathname.split('/');
-		var baseURL = pathComponents.slice(0, pathComponents.length - 2).join(
-				'/')
-				+ '/';
-		require.setRootURI(baseURL + "javascripts/src");
-		require.setLibraryURI(baseURL + "javascripts/lib");
-		require.setGlobalKeyPath("require");
-		var plugins = require('ep_etherpad-lite/static/js/pluginfw/client_plugins');
-		var hooks = require('ep_etherpad-lite/static/js/pluginfw/hooks');
+	<head>
+	<title>Users and groups</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+	<link rel="stylesheet" href="../static/css/admin.css">
+	<script src="../socket.io/socket.io.js"></script>
+	<script src="../static/js/jquery.js"></script>
+	<script type="text/javascript" src="../static/js/require-kernel.js"></script>
+	<script type="text/javascript" src="../javascripts/lib/ep_etherpad-lite/static/js/ace2_common.js?callback=require.define"></script>
+	<script type="text/javascript">
+		(function() {
+			var pathComponents = location.pathname.split('/');
+			var baseURL = pathComponents.slice(0, pathComponents.length - 2).join('/') + '/';
+			require.setRootURI(baseURL + "javascripts/src");
+			require.setLibraryURI(baseURL + "javascripts/lib");
+			require.setGlobalKeyPath("require");
+			var plugins = require('ep_etherpad-lite/static/js/pluginfw/client_plugins');
+			var hooks = require('ep_etherpad-lite/static/js/pluginfw/hooks');
 
-		plugins.baseURL = baseURL;
-		plugins.update(function() {
-			hooks.plugins = plugins;
-			hooks.aCallAll('documentReady', 'admin/user_pad');
-		});
-	}());
-</script>
-<link rel="stylesheet" href="../static/plugins/ep_maadix/static/css/useradministration.css" type="text/css" />
+			plugins.baseURL = baseURL;
+			plugins.update(function() {
+				hooks.plugins = plugins;
+				hooks.aCallAll('documentReady', 'admin/user_pad');
+			});
+		}());
+	</script>
+	<link rel="stylesheet" href="../static/plugins/ep_maadix/static/css/useradministration.css" type="text/css" />
 <% e.begin_block("styles"); %>
 
 <%e.end_block(); %>
-</head>
-<body>
-	<div id="wrapper">
-		<div class="menu">
-			<h1>Etherpad lite</h1>
-			<ul>
-				<% e.begin_block("adminMenu"); %>
-				<li><a href="plugins">Plugin manager</a></li>
-				<li><a href="settings">Settings</a></li>
-				<li><a href="plugins/info">Troubleshooting information</a></li> <%
-				e.end_block(); %>
-			</ul>
-		</div>
+	</head>
+	<body>
+		<div id="wrapper">
+			<div class="menu">
+				<h1>Etherpad lite</h1>
+				<ul>
+					<% e.begin_block("adminMenu"); %>
+					<li><a href="plugins">Plugin manager</a></li>
+					<li><a href="settings">Settings</a></li>
+					<li><a href="plugins/info">Troubleshooting information</a></li>
+					<% e.end_block(); %>
+				</ul>
+			</div>
 
-		<div class="innerwrapper">
-			<h2>Users and groups</h2>
-			<p>In this area you can manage all your users and groups.</p>
-			<p>Currently there are <span id="n_users">0</span> users and <span id="n_groups">0</span> groups created.</p>
-			<a href="userpadadmin/groups"><button type="button">Manage groups</button></a>
-			<a href="userpadadmin/users"><button type="button">Manage users</button></a>
+			<div class="innerwrapper">
+				<h2>Users and groups</h2>
+				<p>In this area you can manage all your users and groups.</p>
+				<p>Currently there are <span id="n_users">0</span> users and <span id="n_groups">0</span> groups created.</p>
+				<a href="userpadadmin/groups"><button type="button">Manage groups</button></a>
+				<a href="userpadadmin/users"><button type="button">Manage users</button></a>
+			</div>
 		</div>
-	</div>
-</body>
-
+	</body>
 </html>
