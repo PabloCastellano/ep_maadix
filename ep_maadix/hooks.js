@@ -160,6 +160,40 @@ function getPassword(cb) {
     cb(rc);
 }
 
+function setSetting(key, value, cb) {
+    log('debug', 'set setting ' + key + ' to value ' + value);
+    var setSettingsSql = "UPDATE Settings SET Settings.value = ? WHERE Settings.key = ?";
+    var setSettingsQuery = connection2.query(setSettingsSql, [value, key]);
+
+    setSettingsQuery.on('error', function(err) {
+        mySqlErrorHandler(err);
+        var retval = {
+            success: false
+        };
+        cb(retval);
+    });
+    setSettingsQuery.on('end', function () {
+        var retval = {
+            success: true
+        };
+        cb(retval);
+    });
+}
+
+function getPadsSettings(cb) {
+    var getSettingsSql = "Select * from Settings";
+    var getSettingsQuery = connection2.query(getSettingsSql);
+    var settings = {};
+
+    getSettingsQuery.on('error', mySqlErrorHandler);
+    getSettingsQuery.on('result', function (result) {
+        settings[result.key] = result.value;
+    });
+    getSettingsQuery.on('end', function () {
+        cb(settings);
+    });
+}
+
 function getEtherpadGroupFromNormalGroup(id, cb) {
     var getMapperSql = "Select * from store where store.key = ?";
     var getMapperQuery = connection2.query(getMapperSql, ["mapper2group:" + id]);
@@ -340,6 +374,18 @@ exports.socketio = function (hook_name, args, cb) {
     var io = args.io.of("/pluginfw/admin/user_pad");
     io.on('connection', function (socket) {
         if (!socket.request.session.user || !socket.request.session.user.is_admin) return;
+
+        socket.on("set-setting", function (key, value, cb) {
+            setSetting(key, value, function (retval) {
+                cb(retval);
+            });
+        });
+
+        socket.on("get-settings", function (cb) {
+            getPadsSettings(function (settings) {
+                cb(settings);
+            });
+        });
 
         socket.on("get-etherpad-group-name", function (groupid, cb) {
             getEtherpadGroupFromNormalGroup(groupid, function (group) {

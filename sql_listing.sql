@@ -38,3 +38,14 @@ CREATE TABLE IF NOT EXISTS `UserGroup` (
 	`Role` int(11) DEFAULT NULL,
 	PRIMARY KEY (`userID`,`groupID`)
 	);
+
+CREATE TABLE IF NOT EXISTS `Settings` (
+	`key` varchar(255) COLLATE utf8_bin NOT NULL,
+	`value` int(11) NOT NULL,
+	PRIMARY KEY (`key`)
+	);
+
+INSERT INTO `Settings` VALUES
+	('register_enabled', 1),
+	('public_pads', 1),
+	('recover_pw', 1);

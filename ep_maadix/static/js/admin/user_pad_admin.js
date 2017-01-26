@@ -771,30 +771,47 @@ function main(hooks,context,cb){
 
 	socket = io.connect(url + "pluginfw/admin/user_pad", {resource : resource});
 
-	var currentGroups = [];
-
+	var getSettings = function(){
+		socket.emit("get-settings", function(settings){
+			$('#public_pads').prop("checked", settings.public_pads ? true : false);
+			$('#recover_pw').prop("checked", settings.recover_pw ? true : false);
+			$('#register_enabled').prop("checked", settings.register_enabled ? true : false);
+		});
+	};
 	var searchGroup = function(searchTerm){
 		socket.emit("search-group", searchTerm, function(allGroups){
-			showGroups(allGroups);
+			$('#n_groups').html(allGroups.length);
 		});
 	};
-
 	var searchUser = function(searchTerm){
 		socket.emit("search-all-user", searchTerm, function(allUsers){
-			showUsers(allUsers);
+			$('#n_users').html(allUsers.length);
 		});
 	};
 
-	var showGroups = function(groups){
-		var span = $('#n_groups');
-		span.html(groups.length);
+	var toggleOption = function(element) {
+		var elementId = element.attr('id');
+		var isChecked = $('#' + elementId).is(':checked') ? 1 : 0;
+
+		socket.emit("set-setting", elementId, isChecked, function(retval){
+		});
+		//$('#' + elementId).attr('checked', !isChecked);
 	};
 
-	var showUsers = function(users){
-		var span = $('#n_users');
-		span.html(users.length);
-	};
+	function handlers(){
+	$('#public_pads').unbind('click').click(function(e) {
+		toggleOption($(e.target));
+	});
+	$('#recover_pw').unbind('click').click(function(e){
+		toggleOption($(e.target));
+	});
+		$('#register_enabled').unbind('click').click(function(e) {
+			toggleOption($(e.target));
+	    });
+	}
+	handlers();
 
+	getSettings();
 	searchGroup('');
 	searchUser('');
 };
