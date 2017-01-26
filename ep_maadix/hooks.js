@@ -67,7 +67,7 @@ var mySqlErrorHandler = function (err) {
     log('debug', 'mySqlErrorHandler');
     // TODO: Review error handling
     var msg;
-    if (fileName in err && lineNumber in err) {
+    if ('fileName' in err && lineNumber in err) {
         msg = 'MySQLError in ' + err.fileName + ' line ' + err.lineNumber + ': ';
     } else {
         msg = 'MySQLError: ';
