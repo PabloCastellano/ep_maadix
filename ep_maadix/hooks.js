@@ -730,7 +730,7 @@ exports.socketio = function (hook_name, args, cb) {
                                 var retval = {};
                                 retval.id = vals.id;
                                 retval.row = vals.row;
-                                var sqlUpdate = "UPDATE User SET User.pwd = ?, User.salt = ? where User.userID = ?";
+                                var sqlUpdate = "UPDATE User SET User.password = ?, User.salt = ? where User.userID = ?";
                                 var updateQuery = connection.query(sqlUpdate, [encrypted, salt, retval.id]);
                                 updateQuery.on('error', mySqlErrorHandler);
                                 updateQuery.on('end', function () {
@@ -748,7 +748,7 @@ exports.socketio = function (hook_name, args, cb) {
                                         retval.success = false;
                                         cb(retval);
                                     } else {
-                                        var sqlUpdate = "UPDATE User SET User.pwd = ?, User.salt = ? where User.userID = ?";
+                                        var sqlUpdate = "UPDATE User SET User.password = ?, User.salt = ? where User.userID = ?";
                                         var updateQuery = connection.query(sqlUpdate, [encrypted, salt, retval.id]);
                                         updateQuery.on('error', mySqlErrorHandler);
                                         updateQuery.on('end', function () {

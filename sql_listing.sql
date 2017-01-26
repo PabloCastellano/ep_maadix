@@ -14,19 +14,13 @@ CREATE TABLE IF NOT EXISTS `Groups` (
 	PRIMARY KEY (`groupID`,`name`)
 	);
 
-CREATE TABLE IF NOT EXISTS `NotRegisteredUsersGroups` (
-	`email` varchar(255) NOT NULL,
-	`groupID` int(11) NOT NULL
-	);
-
 CREATE TABLE IF NOT EXISTS `User` (
 	`userID` int(11) NOT NULL AUTO_INCREMENT,
 	`name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
-	`pwd` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-	`considered` tinyint(11) DEFAULT NULL,
-	`SSO` tinyint(4) DEFAULT NULL,
+	`password` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+	`confirmed` tinyint(11) DEFAULT NULL,
 	`FullName` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-	`considerationString` varchar(50) COLLATE utf8_bin DEFAULT NULL,
+	`confirmationString` varchar(50) COLLATE utf8_bin DEFAULT NULL,
 	`salt` varchar(255) COLLATE utf8_bin DEFAULT NULL,
 	`active` int(1) DEFAULT NULL,
 	PRIMARY KEY (`userID`,`name`)
