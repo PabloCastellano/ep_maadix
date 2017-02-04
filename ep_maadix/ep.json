@@ -3,8 +3,9 @@
     {
       "name": "ep_maadix",
       "hooks": {
-        "expressCreateServer": "ep_maadix/hooks.js",
-        "eejsBlock_adminMenu" : "ep_maadix/hooks.js",
+        "expressCreateServer": "ep_maadix/hooks",
+        "eejsBlock_adminMenu" : "ep_maadix/hooks",
+        "eejsBlock_indexWrapper" : "ep_maadix/hooks",
         "socketio"		: "ep_maadix/hooks",
         "eejsBlock_styles" : "ep_maadix/hooks"
       },

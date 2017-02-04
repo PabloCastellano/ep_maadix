@@ -26,6 +26,7 @@ var authorManager = require('ep_etherpad-lite/node/db/AuthorManager');
 var sessionManager = require('ep_etherpad-lite/node/db/SessionManager');
 var crypto = require('crypto');
 var pkg = require('./package.json');
+var formidable = require("formidable");
 
 var eMailAuth = require(__dirname + '/email.json');
 var dbAuth = settings.dbSettings;
@@ -299,6 +300,45 @@ function deleteUserFromEtherPad(userid, cb) {
     });
 }
 
+var userAuthenticated = function (req, cb) {
+    log('debug', 'userAuthenticated');
+    if (req.session.username && req.session.userId) {
+        cb(true);
+    } else {
+        cb(false);
+    }
+};
+
+var userAuthentication = function (username, password, cb) {
+    log('debug', 'userAuthentication');
+    var userSql = "Select * from User where User.name = ?";
+    var sent = false;
+    var userFound = false;
+    var confirmed = false;
+    var active = true;
+    var queryUser = connection.query(userSql, [username]);
+    queryUser.on('error', mySqlErrorHandler);
+    queryUser.on('result', function (foundUser) {
+        userFound = true;
+        encryptPassword(password, foundUser.salt, function (encrypted) {
+            if (foundUser.password == encrypted && foundUser.confirmed && foundUser.active) {
+                sent = true;
+                cb(true, foundUser, null, confirmed);
+            } else if (!foundUser.active) {
+                active = false;
+            }
+            else {
+                confirmed = foundUser.confirmed;
+            }
+        });
+    });
+    queryUser.on('end', function () {
+        if (!sent) {
+            cb(false, null, userFound, confirmed, active);
+        }
+    });
+};
+
 var emailserver = email.server.connect({
     user: eMailAuth.user,
     password: eMailAuth.password,
@@ -339,6 +379,72 @@ exports.expressCreateServer = function (hook_name, args, cb) {
         };
         res.send(eejs.require("ep_maadix/templates/admin/user_pad_admin_user.ejs", render_args));
     });
+    args.app.get('/logout', function (req, res) {
+        req.session.userId = null;
+        req.session.username = null;
+        res.redirect("/");
+    });
+    args.app.get('/login', function (req, res) {
+        userAuthenticated(req, function (authenticated) {
+            if (authenticated) {
+                 res.redirect("/dashboard");
+            } else {
+                var render_args = {
+                    errors: []
+                };
+                res.send(eejs.require("ep_maadix/templates/login.ejs", render_args));
+            }
+        });
+    });
+    args.app.post('/login', function (req, res) {
+        new formidable.IncomingForm().parse(req, function (err, fields) {
+
+            var render_args = {
+                errors: []
+            };
+
+            if (!fields.email || !fields.password) {
+                res.send(eejs.require("ep_maadix/templates/login.ejs", render_args));
+                return false;
+            }
+
+            var retVal = userAuthentication(fields.email, fields.password, function (success, user, userFound, confirmed, active) {
+                if (success) {
+                    req.session.userId = user.userID;
+                    req.session.username = user.name;
+                    res.redirect('/dashboard');
+                    return true;
+                } else {
+                    if (!active) {
+                        render_args['errors'].push('User is inactive');
+                        res.send(eejs.require("ep_maadix/templates/login.ejs", render_args));
+                    }
+                    else if (!userFound || confirmed) {
+                        render_args['errors'].push('Wrong user or password!');
+                        res.send(eejs.require("ep_maadix/templates/login.ejs", render_args));
+                    }
+                    else if (userFound && !confirmed) {
+                        render_args['errors'].push('You have to confirm your registration first!');
+                        res.send(eejs.require("ep_maadix/templates/login.ejs", render_args));
+                    }
+                    return false;
+                }
+            });
+            return retVal;
+        });
+    });
+    args.app.get('/dashboard', function (req, res) {
+        userAuthenticated(req, function (authenticated) {
+            if (authenticated) {
+                 var render_args = {
+                    username: req.session.username,
+                };
+                 res.send(eejs.require("ep_maadix/templates/dashboard.ejs", render_args));
+            } else {
+                res.redirect("/login");
+            }
+        });
+    });
     return cb();
 };
 
@@ -349,6 +455,11 @@ exports.eejsBlock_adminMenu = function (hook_name, args, cb) {
         , urlPrefix = hasAdminUrlPrefix ? "admin/" : hasTwoDirDown ? "../../" : hasOneDirDown ? "../" : ""
         ;
     args.content = args.content + '<li><a href="' + urlPrefix + 'userpadadmin">Users and groups</a> </li>';
+    return cb();
+};
+
+exports.eejsBlock_indexWrapper = function (hook_name, args, cb) {
+    args.content = eejs.require("ep_maadix/templates/index.ejs");
     return cb();
 };
 
@@ -659,7 +770,7 @@ exports.socketio = function (hook_name, args, cb) {
                                 });
                             });
                             addUserQuery.on('end', function () {
-                                cb(true, 'User created!');
+                                cb(true);
                             });
                         });
                     });

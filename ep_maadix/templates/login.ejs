@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+        <title>Etherpad login</title>
+
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+        <link rel="shortcut icon" href="favicon.ico">
+
+        <link rel="localizations" type="application/l10n+json" href="locales.json">
+        <script type="text/javascript" src="static/js/html10n.js"></script>
+        <script type="text/javascript" src="static/js/l10n.js"></script>
+
+        <style>
+            html, body {
+              height: 100%;
+            }
+            body {
+              margin: 0;
+              color: #333;
+              font: 14px helvetica, sans-serif;
+              background: #ddd;
+              background: -webkit-radial-gradient(circle,#aaa,#eee 60%) center fixed;
+              background: -moz-radial-gradient(circle,#aaa,#eee 60%) center fixed;
+              background: -ms-radial-gradient(circle,#aaa,#eee 60%) center fixed;
+              background: -o-radial-gradient(circle,#aaa,#eee 60%) center fixed;
+              border-top: 8px solid rgba(51,51,51,.8);
+            }
+            #wrapper {
+              border-top: 1px solid #999;
+              margin-top: 160px;
+              padding-bottom: 100px;
+              padding-top: 30px;
+              background: #eee;
+              background: -webkit-linear-gradient(#fff,#ccc);
+              background: -moz-linear-gradient(#fff,#ccc);
+              background: -ms-linear-gradient(#fff,#ccc);
+              background: -o-linear-gradient(#fff,#ccc);
+              box-shadow: 0px 1px 8px rgba(0,0,0,0.3);
+            }
+            #inner {
+              position:relative;
+              max-width: 300px;
+              margin: 0 auto;
+            }
+            form {
+              height: 38px;
+              background: #fff;
+              border: 1px solid #bbb;
+              border-radius: 3px;
+              position: relative;
+            }
+            button, input {
+              font-weight: bold;
+              font-size: 15px;
+            }
+            input {
+              border-radius: 3px;
+              box-sizing: border-box;
+              -moz-box-sizing: border-box;   
+              line-height:36px; /* IE8 hack */
+              padding: 0px 45px 0 10px;
+              *padding: 0; /* IE7 hack */
+              width: 100%;
+              height: 100%;
+              outline: none;
+              border: none;
+              position: relative;
+            }
+            button[type="submit"] {
+              position: relative;
+              width: 100%;
+              height: 38px;
+            }
+            @media only screen and (min-device-width: 320px) and (max-device-width: 720px) {
+              body {
+                background: #bbb;
+                background: -webkit-linear-gradient(#aaa,#eee 60%) center fixed;
+                background: -moz-linear-gradient(#aaa,#eee 60%) center fixed;
+                background: -ms-linear-gradient(#aaa,#eee 60%) center fixed;
+              }
+              #wrapper {
+                margin-top: 0;
+              }
+              #inner {
+                width: 95%;        
+              }
+              #label {
+                text-align: center;
+              }
+            }
+        </style>
+        
+        <link href="static/custom/index.css" rel="stylesheet"> 
+
+        <div id="wrapper">
+            <div id="inner">
+                <% if (errors.length) { %>
+                    <div class="errors">
+                    <% errors.forEach(function (item) { %>
+                        <div class="error"><%= item.toString() %></div>
+                    <% }) %>
+                    </div>
+                <% } %>
+                <form id="formEtherpadLogin" method="post">
+                    <input type="text" name="email" id="email" placeholder="E-mail address" class="smallMarginBottom">
+                    <input type="password" name="password" id="password" placeholder="Password">
+                    <button type="submit" lang="en">Login</button>
+                </form>
+            </div>
+        </div>
+
+</html>
