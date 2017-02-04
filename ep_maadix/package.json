@@ -3,7 +3,9 @@
   "description": "With the user_pad plugin it's possible to create password saved pads in groups. It's a User-Management System. It allows User to register, authenticate, to create groups and to create pads in groups. This package is the admin part of the system.",
   "version": "0.1.3",
   "author": {
-    "name": "Alexander Oberegger"
+    "name": "Pablo Castellano",
+    "email": "pablo@anche.no",
+    "url": "https://pablog.me)"
   },
   "dependencies": {
     "formidable": "1.1.1",
