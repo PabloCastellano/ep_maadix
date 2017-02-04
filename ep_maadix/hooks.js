@@ -649,7 +649,7 @@ exports.socketio = function (hook_name, args, cb) {
                     var addUserSql = "";
                     createSalt(function (salt) {
                         encryptPassword(user.pw, salt, function (encrypted) {
-                            addUserSql = "INSERT INTO User VALUES(null, ?,?,1,0,'Change This Name','klfdsa',?,1)";
+                            addUserSql = "INSERT INTO User VALUES(null, ?,?,1,'','klfdsa',?,1)";
                             var addUserQuery = connection.query(addUserSql, [user.name, encrypted, salt]);
                             addUserQuery.on('error', mySqlErrorHandler);
                             addUserQuery.on('result', function (newUser) {
